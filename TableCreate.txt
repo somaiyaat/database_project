@@ -1,0 +1,234 @@
+Drop table Transport_Registration;
+Drop table Transport;
+Drop table Routes;
+Drop table LibraryStaff;
+Drop table BookReservations;
+Drop table Issued_Books;
+Drop table Books;
+Drop table Authors;
+Drop table Administration;
+Drop table Finance;
+Drop table Staff;
+Drop table Timetable;
+Drop table Exam;
+Drop table Attendance;
+Drop table Grades;
+Drop table Enrollments;
+Drop table Courses;
+Drop table Students;
+DROP TABLE Faculty CASCADE CONSTRAINTS;
+DROP TABLE Departments CASCADE CONSTRAINTS;
+
+CREATE TABLE students (
+    student_ID INT PRIMARY KEY,
+    FirstName VARCHAR(10),
+    LastName VARCHAR(10),
+    Date_Of_Birth DATE,
+    Gender VARCHAR(6),
+    Email VARCHAR(20),
+    phone_Number VARCHAR(12),
+    Address VARCHAR(15),
+    Department_ID INT,
+    Admission_Date DATE,
+    Status VARCHAR(10)
+);
+CREATE TABLE Faculty (
+    faculty_ID INT PRIMARY KEY,
+    FirstName VARCHAR(10),
+    LastName VARCHAR(10),
+    Email VARCHAR(30),
+    Phone_Number VARCHAR(12),
+    Department_ID INT,
+    Designation VARCHAR(30),
+    Hire_Date DATE,
+    Status VARCHAR(10)
+    );
+
+CREATE TABLE Departments (
+    department_ID INT PRIMARY KEY,
+    department_Name VARCHAR(25),
+    head_Of_Department INT,
+    office_Location VARCHAR(15),
+    email VARCHAR(20),
+    FOREIGN KEY (head_Of_Department) REFERENCES Faculty(faculty_ID)
+);
+
+ALTER TABLE Faculty
+ADD CONSTRAINT fk_faculty_dept
+FOREIGN KEY (Department_ID) REFERENCES Departments(department_ID);
+
+CREATE TABLE courses (
+    course_ID INT PRIMARY KEY,
+    Course_Name VARCHAR(30),
+    course_Code VARCHAR(10),
+    department_ID INT,
+    credits INT,
+    semester VARCHAR(10),
+    description VARCHAR(100),
+    FOREIGN KEY (department_ID) REFERENCES departments(department_ID)
+);
+CREATE TABLE enrollments (
+    enrollment_ID INT PRIMARY KEY,
+    student_ID INT,
+    course_ID INT,
+    semester VARCHAR(10),
+    year INT,
+    enrollment_Date DATE,
+    FOREIGN KEY (student_ID) REFERENCES students(student_ID),
+    FOREIGN KEY (course_ID) REFERENCES courses(course_ID)
+);
+
+CREATE TABLE Grades (
+    grade_ID INT PRIMARY KEY,
+    student_ID INT,
+    course_ID INT,
+    semester VARCHAR(10),
+    grade VARCHAR(2),
+    CGPA DECIMAL(3,2),
+    FOREIGN KEY (student_ID) REFERENCES students(student_ID),
+    FOREIGN KEY (course_ID) REFERENCES courses(course_ID)
+);
+CREATE TABLE attendance (
+    attendance_ID INT PRIMARY KEY,
+    student_ID INT,
+    course_ID INT,
+    datee DATE,
+    status VARCHAR(10),
+    FOREIGN KEY (student_ID) REFERENCES students(student_ID),
+    FOREIGN KEY (course_ID) REFERENCES courses(course_ID)
+);
+
+CREATE TABLE Exam (
+    Exam_ID INTEGER PRIMARY KEY,
+    Course_ID INTEGER,
+    Exam_Type VARCHAR(10),
+    Exam_Date DATE,
+    Location VARCHAR(10),
+    FOREIGN KEY (Course_ID) REFERENCES Courses(Course_ID)
+);
+
+CREATE TABLE Timetable (
+    Time_table_ID INTEGER PRIMARY KEY,
+    Course_ID INTEGER,
+    Faculty_ID INTEGER,
+    Day_Of_Week VARCHAR(10),
+    Start_Time TIMESTAMP,
+    End_Time TIMESTAMP,
+    Room_Number VARCHAR(10),
+    FOREIGN KEY (Course_ID) REFERENCES Courses(Course_ID),
+    FOREIGN KEY (Faculty_ID) REFERENCES Faculty(Faculty_ID)
+);
+
+CREATE TABLE Staff (
+    Staff_ID INTEGER PRIMARY KEY,
+    FirstName VARCHAR(20),
+    LastName VARCHAR(20),
+    Position VARCHAR(20),
+    Phone_Number VARCHAR(12),
+    Email VARCHAR(50),
+    Department_ID INTEGER,
+    Joining_Date DATE,
+    FOREIGN KEY (Department_ID) REFERENCES Departments(Department_ID)
+);
+
+CREATE TABLE Finance (
+    Finance_ID INTEGER PRIMARY KEY,
+    Student_ID INTEGER,
+    Tuition_Fee DECIMAL(10,2),
+    Hostel_Fee DECIMAL(10,2),
+    Transport_Fee DECIMAL(10,2),
+    Total_Amount DECIMAL(10,2),
+    Amount_Paid DECIMAL(10,2),
+    Due_Amount DECIMAL(10,2),
+    Payment_Status VARCHAR(20),
+    FOREIGN KEY (Student_ID) REFERENCES Students(Student_ID)
+);
+
+CREATE TABLE Administration (
+    Admin_ID INTEGER PRIMARY KEY,
+    Username VARCHAR(20),
+    Password VARCHAR(20),
+    Role VARCHAR(50),
+    Email VARCHAR(30),
+    Last_Login TIMESTAMP
+);
+
+CREATE TABLE Authors (
+    Author_ID INTEGER PRIMARY KEY,
+    FirstName VARCHAR(20),
+    LastName VARCHAR(20),
+    Birth_Date DATE,
+    Nationality VARCHAR(20)
+);
+
+CREATE TABLE Books (
+    Book_ID INTEGER PRIMARY KEY,
+    Title VARCHAR(20),
+    Author_ID INTEGER,
+    ISBN VARCHAR(20),
+    Price DECIMAL(10,2),
+    Publication_Year INTEGER,
+    Category VARCHAR(20),
+    Publisher VARCHAR(25),
+    Total_Copies INTEGER,
+    Available_Copies INTEGER,
+    Shelf_Location VARCHAR(10),
+    FOREIGN KEY (Author_ID) REFERENCES Authors(Author_ID)
+);
+
+CREATE TABLE Issued_Books (
+    Issue_ID INTEGER PRIMARY KEY,
+    Book_ID INTEGER,
+    Student_ID INTEGER,
+    Issue_Date DATE,
+    Due_Date DATE,
+    Return_Date DATE,
+    Fine_Amount DECIMAL(10,2),
+    FOREIGN KEY (Book_ID) REFERENCES Books(Book_ID),
+    FOREIGN KEY (Student_ID) REFERENCES Students(Student_ID)
+);
+
+CREATE TABLE BookReservations (
+    Reservation_ID INTEGER PRIMARY KEY,
+    Book_ID INTEGER,
+    Student_ID INTEGER,
+    Reservation_Date DATE,
+    Status VARCHAR(15), -- 'Pending', 'Completed', 'Cancelled'
+    FOREIGN KEY (Book_ID) REFERENCES Books(Book_ID),
+    FOREIGN KEY (Student_ID) REFERENCES Students(Student_ID)
+);
+CREATE TABLE LibraryStaff (
+    Library_Staff_ID INTEGER PRIMARY KEY,
+    FirstName VARCHAR(10),
+    LastName VARCHAR(10),
+    Email VARCHAR(20),
+    Phone_Number VARCHAR(12),
+    Hire_Date DATE
+);
+CREATE TABLE Routes (
+    route_id INTEGER PRIMARY KEY,
+    route_name VARCHAR(10),
+    start_point VARCHAR(10),
+    end_point VARCHAR(10),
+    departure_time DATE, -- Oracle does not support TIME directly
+    arrival_time DATE
+);
+CREATE TABLE Transport (
+    bus_id INTEGER PRIMARY KEY,
+    route_id INTEGER,
+    driver_name VARCHAR(20),
+    capacity INTEGER,
+    status VARCHAR(20),
+    FOREIGN KEY (route_id) REFERENCES Routes(route_id)
+);
+
+CREATE TABLE Transport_Registration (
+    registration_id INTEGER PRIMARY KEY,
+    student_id INTEGER,
+    bus_id INTEGER,
+    route_id INTEGER,
+    registration_date DATE,
+    FOREIGN KEY (student_id) REFERENCES Students(student_ID),
+    FOREIGN KEY (bus_id) REFERENCES Transport(bus_id),
+    FOREIGN KEY (route_id) REFERENCES Routes(route_id)
+);
