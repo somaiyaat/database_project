@@ -1,0 +1,99 @@
+-- 🔹 Departments
+INSERT INTO Departments VALUES (1, 'Computer Science', NULL, 'Block A', 'cs@univ.edu');
+INSERT INTO Departments VALUES (2, 'Electrical Engineering', NULL, 'Block B', 'eee@univ.edu');
+INSERT INTO Departments VALUES (3, 'Business Administration', NULL, 'Block C', 'bba@univ.edu');
+
+-- 🔹 Faculty
+INSERT INTO Faculty VALUES (101, 'Hasan', 'Khan', 'hasan@univ.edu', '01711111111', 1, 'Professor', DATE '2015-01-10', 'Active');
+INSERT INTO Faculty VALUES (102, 'Rashid', 'Ahmed', 'rashid@univ.edu', '01722222222', 2, 'Associate Professor', DATE '2017-03-15', 'Active');
+INSERT INTO Faculty VALUES (103, 'Nusrat', 'Jahan', 'nusrat@univ.edu', '01733333333', 3, 'Lecturer', DATE '2020-09-01', 'Active');
+
+-- 🔹 Students
+INSERT INTO Students VALUES (201, 'Rahim', 'Uddin', DATE '2002-05-10', 'Male', 'rahim@univ.edu', '01811111111', 'Dhaka', 1, DATE '2021-01-10', 'Active');
+INSERT INTO Students VALUES (202, 'Karim', 'Ali', DATE '2001-11-22', 'Male', 'karim@univ.edu', '01822222222', 'Chittagong', 2, DATE '2020-02-15', 'Active');
+INSERT INTO Students VALUES (203, 'Fatema', 'Begum', DATE '2003-03-05', 'Female', 'fatema@univ.edu', '01833333333', 'Sylhet', 3, DATE '2022-07-20', 'Active');
+
+-- 🔹 Courses
+INSERT INTO Courses VALUES (301, 'Database Systems', 'CSE301', 1, 3, 'Fall', 'Database concepts and SQL');
+INSERT INTO Courses VALUES (302, 'Circuit Theory', 'EEE210', 2, 3, 'Spring', 'Basics of electrical circuits');
+INSERT INTO Courses VALUES (303, 'Marketing Principles', 'BBA110', 3, 2, 'Fall', 'Introduction to marketing');
+
+-- 🔹 Enrollments
+INSERT INTO Enrollments VALUES (401, 201, 301, 'Fall', 2024, DATE '2024-01-15');
+INSERT INTO Enrollments VALUES (402, 202, 302, 'Spring', 2024, DATE '2024-02-20');
+INSERT INTO Enrollments VALUES (403, 203, 303, 'Fall', 2024, DATE '2024-01-18');
+
+-- 🔹 Grades
+INSERT INTO Grades VALUES (501, 201, 301, 'Fall', 'A', 3.80);
+INSERT INTO Grades VALUES (502, 202, 302, 'Spring', 'B', 3.20);
+INSERT INTO Grades VALUES (503, 203, 303, 'Fall', 'A', 3.90);
+
+-- 🔹 Attendance
+INSERT INTO Attendance VALUES (601, 201, 301, DATE '2024-03-01', 'Present');
+INSERT INTO Attendance VALUES (602, 202, 302, DATE '2024-03-01', 'Absent');
+INSERT INTO Attendance VALUES (603, 203, 303, DATE '2024-03-01', 'Present');
+
+-- 🔹 Exam
+INSERT INTO Exam VALUES (701, 301, 'Mid', DATE '2024-03-10', 'Room 101');
+INSERT INTO Exam VALUES (702, 302, 'Final', DATE '2024-05-20', 'Room 202');
+INSERT INTO Exam VALUES (703, 303, 'Quiz', DATE '2024-02-15', 'Room 303');
+
+-- 🔹 Timetable
+INSERT INTO Timetable VALUES (801, 301, 101, 'Monday', TIMESTAMP '2024-01-01 09:00:00', TIMESTAMP '2024-01-01 11:00:00', 'R101');
+INSERT INTO Timetable VALUES (802, 302, 102, 'Tuesday', TIMESTAMP '2024-01-02 10:00:00', TIMESTAMP '2024-01-02 12:00:00', 'R202');
+INSERT INTO Timetable VALUES (803, 303, 103, 'Wednesday', TIMESTAMP '2024-01-03 11:00:00', TIMESTAMP '2024-01-03 13:00:00', 'R303');
+
+-- 🔹 Staff
+INSERT INTO Staff VALUES (901, 'Jamal', 'Hossain', 'Clerk', '01744444444', 'jamal@univ.edu', 1, DATE '2019-01-01');
+INSERT INTO Staff VALUES (902, 'Sadia', 'Akter', 'Librarian', '01755555555', 'sadia@univ.edu', 3, DATE '2021-03-05');
+INSERT INTO Staff VALUES (903, 'Shahid', 'Khan', 'Technician', '01766666666', 'shahid@univ.edu', 2, DATE '2020-07-15');
+
+-- 🔹 Finance
+INSERT INTO Finance VALUES (1001, 201, 50000, 20000, 10000, 80000, 60000, 20000, 'Due');
+INSERT INTO Finance VALUES (1002, 202, 55000, 22000, 12000, 89000, 89000, 0, 'Paid');
+INSERT INTO Finance VALUES (1003, 203, 48000, 18000, 8000, 74000, 50000, 24000, 'Due');
+
+-- 🔹 Administration
+INSERT INTO Administration VALUES (1101, 'admin1', 'pass123', 'SuperAdmin', 'admin1@univ.edu', SYSTIMESTAMP);
+INSERT INTO Administration VALUES (1102, 'admin2', 'pass456', 'Librarian', 'admin2@univ.edu', SYSTIMESTAMP);
+INSERT INTO Administration VALUES (1103, 'admin3', 'pass789', 'TransportAdmin', 'admin3@univ.edu', SYSTIMESTAMP);
+
+-- 🔹 Authors
+INSERT INTO Authors VALUES (1201, 'J.K.', 'Rowling', DATE '1965-07-31', 'British');
+INSERT INTO Authors VALUES (1202, 'Dan', 'Brown', DATE '1964-06-22', 'American');
+INSERT INTO Authors VALUES (1203, 'Humayun', 'Ahmed', DATE '1948-11-13', 'Bangladeshi');
+
+-- 🔹 Books
+INSERT INTO Books VALUES (1301, 'Harry Potter', 1201, '9780747532743', 500.00, 1997, 'Fantasy', 'Bloomsbury', 20, 15, 'S1');
+INSERT INTO Books VALUES (1302, 'The Da Vinci Code', 1202, '9780385504201', 600.00, 2003, 'Thriller', 'Doubleday', 15, 10, 'S2');
+INSERT INTO Books VALUES (1303, 'Nondito Noroke', 1203, '9789844581125', 300.00, 1972, 'Novel', 'Sheba Prokashoni', 10, 8, 'S3');
+
+-- 🔹 Issued_Books
+INSERT INTO Issued_Books VALUES (1401, 1301, 201, DATE '2024-02-01', DATE '2024-02-20', NULL, 0);
+INSERT INTO Issued_Books VALUES (1402, 1302, 202, DATE '2024-02-05', DATE '2024-02-25', DATE '2024-02-24', 0);
+INSERT INTO Issued_Books VALUES (1403, 1303, 203, DATE '2024-02-10', DATE '2024-03-01', NULL, 50);
+
+-- 🔹 BookReservations
+INSERT INTO BookReservations VALUES (1501, 1301, 201, DATE '2024-01-15', 'Pending');
+INSERT INTO BookReservations VALUES (1502, 1302, 202, DATE '2024-01-18', 'Completed');
+INSERT INTO BookReservations VALUES (1503, 1303, 203, DATE '2024-01-20', 'Cancelled');
+
+-- 🔹 LibraryStaff
+INSERT INTO LibraryStaff VALUES (1601, 'Rafiq', 'Hasan', 'rafiq@univ.edu', '01777777777', DATE '2018-05-10');
+INSERT INTO LibraryStaff VALUES (1602, 'Selina', 'Khatun', 'selina@univ.edu', '01788888888', DATE '2020-06-15');
+INSERT INTO LibraryStaff VALUES (1603, 'Kamal', 'Hossain', 'kamal@univ.edu', '01799999999', DATE '2021-09-01');
+
+-- 🔹 Routes
+INSERT INTO Routes VALUES (1701, 'Route A', 'Mirpur', 'Campus', DATE '2024-01-01', DATE '2024-01-01');
+INSERT INTO Routes VALUES (1702, 'Route B', 'Uttara', 'Campus', DATE '2024-01-01', DATE '2024-01-01');
+INSERT INTO Routes VALUES (1703, 'Route C', 'Gulshan', 'Campus', DATE '2024-01-01', DATE '2024-01-01');
+
+-- 🔹 Transport
+INSERT INTO Transport VALUES (1801, 1701, 'Driver A', 40, 'Active');
+INSERT INTO Transport VALUES (1802, 1702, 'Driver B', 35, 'Active');
+INSERT INTO Transport VALUES (1803, 1703, 'Driver C', 50, 'Inactive');
+
+-- 🔹 Transport_Registration
+INSERT INTO Transport_Registration VALUES (1901, 201, 1801, 1701, DATE '2024-01-10');
+INSERT INTO Transport_Registration VALUES (1902, 202, 1802, 1702, DATE '2024-01-12');
+INSERT INTO Transport_Registration VALUES (1903, 203, 1803, 1703, DATE '2024-01-15');
