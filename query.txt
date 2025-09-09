@@ -1,0 +1,271 @@
+--🔹All students:
+SELECT * FROM Students;
+
+--🔹All faculty names and designations:
+SELECT FirstName, LastName, Designation FROM Faculty;
+
+--🔹List all courses offered in the "Fall" semester:
+SELECT Course_Name FROM Courses WHERE Semester = 'Fall';
+
+--🔹Students who live in Dhaka:
+SELECT * FROM Students WHERE Address = 'Dhaka';
+
+--🔹All active faculty members:
+SELECT * FROM Faculty WHERE Status = 'Active';
+
+--🔹Order students by Admission_Date (newest first):
+SELECT * FROM Students ORDER BY Admission_Date DESC;
+
+--🔹All books that belong to category = Fantasy:
+SELECT Title FROM Books WHERE Category = 'Fantasy';
+
+--🔹Total number of students:
+SELECT COUNT(*) AS Total_Students FROM Students;
+
+--🔹All courses with credits greater than 2:
+SELECT * FROM Courses WHERE Credits > 2;
+
+--🔹Books where title contains "Code":
+SELECT * FROM Books WHERE Title LIKE '%Code%';
+
+--🔹List students with their department names:
+SELECT s.FirstName, s.LastName, d.Department_Name
+FROM Students s
+JOIN Departments d ON s.Department_ID = d.Department_ID;
+
+--🔹List courses with department names:
+SELECT c.Course_Name, d.Department_Name
+FROM Courses c
+JOIN Departments d ON c.Department_ID = d.Department_ID;
+
+--🔹Show enrollments with student names and course names:
+SELECT e.Enrollment_ID, s.FirstName, s.LastName, c.Course_Name
+FROM Enrollments e
+JOIN Students s ON e.Student_ID = s.Student_ID
+JOIN Courses c ON e.Course_ID = c.Course_ID;
+
+--🔹Show grades of students in "Database Systems":
+SELECT s.FirstName, s.LastName, g.Grade
+FROM Grades g
+JOIN Students s ON g.Student_ID = s.Student_ID
+JOIN Courses c ON g.Course_ID = c.Course_ID
+WHERE c.Course_Name = 'Database Systems';
+
+--🔹Show total number of students in each department:
+SELECT d.Department_Name, COUNT(s.Student_ID) AS Total_Students
+FROM Departments d
+LEFT JOIN Students s ON d.Department_ID = s.Department_ID
+GROUP BY d.Department_Name;
+
+--🔹Find total number of books issued by each student:
+SELECT s.FirstName, s.LastName, COUNT(ib.Issue_ID) AS Books_Issued
+FROM Students s
+JOIN Issued_Books ib ON s.Student_ID = ib.Student_ID
+GROUP BY s.FirstName, s.LastName;
+
+--🔹List students with pending library reservations:
+SELECT s.FirstName, s.LastName, br.Status
+FROM BookReservations br
+JOIN Students s ON br.Student_ID = s.Student_ID
+WHERE br.Status = 'Pending';
+
+--🔹Find average CGPA of students per department:
+SELECT d.Department_Name, AVG(g.CGPA) AS Avg_CGPA
+FROM Grades g
+JOIN Students s ON g.Student_ID = s.Student_ID
+JOIN Departments d ON s.Department_ID = d.Department_ID
+GROUP BY d.Department_Name;
+
+--🔹Show exam schedule with course and faculty names:
+SELECT e.Exam_ID, c.Course_Name, f.FirstName || ' ' || f.LastName AS Faculty_Name, e.Exam_Date
+FROM Exam e
+JOIN Courses c ON e.Course_ID = c.Course_ID
+JOIN Timetable t ON c.Course_ID = t.Course_ID
+JOIN Faculty f ON t.Faculty_ID = f.Faculty_ID;
+
+--🔹Show total income from tuition fees:
+SELECT SUM(Tuition_Fee) AS Total_Tuition_Income FROM Finance;
+
+--🔹Find students who have never borrowed any book:
+SELECT FirstName, LastName
+FROM Students
+WHERE Student_ID NOT IN (SELECT DISTINCT Student_ID FROM Issued_Books);
+
+--🔹Find books with zero available copies:
+SELECT Title FROM Books WHERE Available_Copies = 0;
+
+--🔹Show students who paid full fees:
+SELECT s.FirstName, s.LastName
+FROM Students s
+JOIN Finance f ON s.Student_ID = f.Student_ID
+WHERE f.Due_Amount = 0;
+
+--🔹Find top student (highest CGPA):
+SELECT s.FirstName, s.LastName, g.CGPA
+FROM Grades g
+JOIN Students s ON g.Student_ID = s.Student_ID
+ORDER BY g.CGPA DESC;
+
+--🔹Find students who have both library fines and finance dues:
+SELECT DISTINCT s.FirstName, s.LastName
+FROM Students s
+JOIN Issued_Books ib ON s.Student_ID = ib.Student_ID
+JOIN Finance f ON s.Student_ID = f.Student_ID
+WHERE ib.Fine_Amount > 0 AND f.Due_Amount > 0;
+
+--🔹Show all faculty who are also department heads:
+SELECT f.FirstName, f.LastName, d.Department_Name
+FROM Faculty f
+JOIN Departments d ON f.Faculty_ID = d.Head_Of_Department;
+
+--🔹Find the department with most students:
+SELECT d.Department_Name, COUNT(s.Student_ID) AS Total
+FROM Departments d
+JOIN Students s ON d.Department_ID = s.Department_ID
+GROUP BY d.Department_Name
+ORDER BY Total DESC;
+
+--🔹Show timetable of student Rahim:
+SELECT t.Day_Of_Week, t.Start_Time, t.End_Time, c.Course_Name
+FROM Timetable t
+JOIN Courses c ON t.Course_ID = c.Course_ID
+JOIN Enrollments e ON c.Course_ID = e.Course_ID
+JOIN Students s ON e.Student_ID = s.Student_ID
+WHERE s.FirstName = 'Rahim';
+
+--🔹Find students who attended all classes (only 'Present'):
+SELECT s.FirstName, s.LastName
+FROM Students s
+WHERE NOT EXISTS (
+    SELECT 1 FROM Attendance a 
+    WHERE a.Student_ID = s.Student_ID AND a.Status = 'Absent'
+);
+
+--🔹Show exams happening in March 2024:
+SELECT * FROM Exam
+WHERE EXTRACT(MONTH FROM Exam_Date) = 3
+AND EXTRACT(YEAR FROM Exam_Date) = 2024;
+
+--🔹Rank students by CGPA (highest first):
+SELECT s.FirstName, s.LastName, g.CGPA,
+RANK() OVER (ORDER BY g.CGPA DESC) AS Rank_Position
+FROM Students s
+JOIN Grades g ON s.Student_ID = g.Student_ID;
+
+--🔹Show the most expensive book:
+SELECT Title, Price FROM Books
+WHERE Price = (SELECT MAX(Price) FROM Books);
+
+--🔹Show faculty teaching the most courses:
+SELECT f.FirstName, f.LastName, COUNT(t.Course_ID) AS Total_Courses
+FROM Timetable t
+JOIN Faculty f ON t.Faculty_ID = f.Faculty_ID
+GROUP BY f.FirstName, f.LastName
+ORDER BY Total_Courses DESC;
+
+--🔹Find students who reserved but never issued a book:
+SELECT s.FirstName, s.LastName
+FROM Students s
+JOIN BookReservations br ON s.Student_ID = br.Student_ID
+WHERE s.Student_ID NOT IN (SELECT DISTINCT Student_ID FROM Issued_Books);
+
+--🔹Show transport registration with route and driver:
+SELECT s.FirstName, s.LastName, r.Route_Name, t.Driver_Name
+FROM Transport_Registration tr
+JOIN Students s ON tr.Student_ID = s.Student_ID
+JOIN Routes r ON tr.Route_ID = r.Route_ID
+JOIN Transport t ON tr.Bus_ID = t.Bus_ID;
+
+--🔹Show total number of books per author:
+SELECT a.FirstName, a.LastName, COUNT(b.Book_ID) AS Total_Books
+FROM Authors a
+JOIN Books b ON a.Author_ID = b.Author_ID
+GROUP BY a.FirstName, a.LastName;
+
+--🔹Show students who failed (grade = 'F'):
+SELECT s.FirstName, s.LastName, g.Grade
+FROM Grades g
+JOIN Students s ON g.Student_ID = s.Student_ID
+WHERE g.Grade = 'F';
+
+--🔹Show percentage of paid vs due students:
+SELECT Payment_Status, ROUND(COUNT(*)*100 / (SELECT COUNT(*) FROM Finance),2) AS Percentage
+FROM Finance
+GROUP BY Payment_Status;
+
+--🔹Find the faculty with the earliest hire date:
+SELECT FirstName, LastName, Hire_Date
+FROM Faculty
+WHERE Hire_Date = (SELECT MIN(Hire_Date) FROM Faculty);
+
+--🔹Show courses with no enrollments:
+SELECT Course_Name
+FROM Courses
+WHERE Course_ID NOT IN (SELECT DISTINCT Course_ID FROM Enrollments);
+
+--🔹Show moving average of CGPA:
+SELECT Student_ID, CGPA,
+AVG(CGPA) OVER (ORDER BY Student_ID ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) AS Moving_Avg
+FROM Grades;
+
+--🔹Show each student’s total paid vs due amount:
+SELECT s.FirstName, s.LastName, f.Amount_Paid, f.Due_Amount
+FROM Students s
+JOIN Finance f ON s.Student_ID = f.Student_ID;
+
+--🔹Show top 3 most issued books:
+SELECT b.Title, COUNT(ib.Issue_ID) AS Times_Issued
+FROM Issued_Books ib
+JOIN Books b ON ib.Book_ID = b.Book_ID
+GROUP BY b.Title
+ORDER BY Times_Issued DESC;
+
+--🔹Find students who borrowed books but never returned:
+SELECT s.FirstName, s.LastName, b.Title
+FROM Issued_Books ib
+JOIN Students s ON ib.Student_ID = s.Student_ID
+JOIN Books b ON ib.Book_ID = b.Book_ID
+WHERE ib.Return_Date IS NULL;
+
+--🔹Show library staff and total books they manage (if linked):
+SELECT ls.FirstName, ls.LastName, COUNT(br.Reservation_ID) AS Reservations_Handled
+FROM LibraryStaff ls
+LEFT JOIN BookReservations br ON 1=1 -- (assume general staff handles reservations)
+GROUP BY ls.FirstName, ls.LastName;
+
+--🔹Find transport routes with no students:
+SELECT r.Route_Name
+FROM Routes r
+WHERE r.Route_ID NOT IN (SELECT DISTINCT Route_ID FROM Transport_Registration);
+
+--🔹Show students with highest attendance percentage:
+SELECT s.FirstName, s.LastName,
+(SUM(CASE WHEN a.Status='Present' THEN 1 ELSE 0 END) * 100 / COUNT(*)) AS Attendance_Percentage
+FROM Attendance a
+JOIN Students s ON a.Student_ID = s.Student_ID
+GROUP BY s.FirstName, s.LastName
+ORDER BY Attendance_Percentage DESC;
+
+--🔹Find departments that don’t have any faculty:
+SELECT Department_Name
+FROM Departments
+WHERE Department_ID NOT IN (SELECT DISTINCT Department_ID FROM Faculty);
+
+--🔹Show library fine total per student:
+SELECT s.FirstName, s.LastName, SUM(ib.Fine_Amount) AS Total_Fine
+FROM Issued_Books ib
+JOIN Students s ON ib.Student_ID = s.Student_ID
+GROUP BY s.FirstName, s.LastName;
+
+--🔹Show list of students who are enrolled in all courses of their department:
+SELECT s.FirstName, s.LastName
+FROM Students s
+WHERE NOT EXISTS (
+    SELECT c.Course_ID FROM Courses c
+    WHERE c.Department_ID = s.Department_ID
+    MINUS
+    SELECT e.Course_ID FROM Enrollments e WHERE e.Student_ID = s.Student_ID
+);
+
+
+
