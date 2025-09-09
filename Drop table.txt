@@ -1,0 +1,22 @@
+Drop table Transport_Registration;
+Drop table Transport;
+Drop table Routes;
+Drop table LibraryStaff;
+Drop table BookReservations;
+Drop table Issued_Books;
+Drop table Books;
+Drop table Authors;
+Drop table Administration;
+Drop table Finance;
+Drop table Staff;
+Drop table Timetable;
+Drop table Exam;
+Drop table Attendance;
+Drop table Grades;
+Drop table Enrollments;
+Drop table Courses;
+Drop table Students;
+DROP TABLE Faculty CASCADE CONSTRAINTS;
+DROP TABLE Departments CASCADE CONSTRAINTS;
+
+
